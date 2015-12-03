@@ -1,7 +1,9 @@
 package com.joyliu.instagramphotoviewer;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -17,6 +19,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class PhotosActivity extends AppCompatActivity {
 
+    private SwipeRefreshLayout swipeContainer;
+
     public static final String CLIENT_ID = "e05c462ebd86446ea48a5af73769b602";
     private ArrayList<InstagramPhoto> photos;
     private InstagramPhotosAdapter aPhotos;
@@ -25,21 +29,36 @@ public class PhotosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photos);
-        // SEND OUT API REQUEST TO POPULAR PHOTOS
-        photos = new ArrayList<>();
 
         // CREATE THE ADAPTER AND LINK TO SOURCE
+        photos = new ArrayList<>();
         aPhotos = new InstagramPhotosAdapter(this, photos);
 
-        // FIND THE LISTVIEW FROM LAYOUT
+        // LINK VIEWS FROM LAYOUT
         ListView lvPhotos = (ListView) findViewById(R.id.lvPhotos);
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
         // SET ADAPTER BINDING TO LISTVIEW
         lvPhotos.setAdapter(aPhotos);
 
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                fetchPopularPhotos();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
         // FETCH POPULAR PHOTOS
         fetchPopularPhotos();
-
     }
 
     // TRIGGER API REQUEST
@@ -47,11 +66,15 @@ public class PhotosActivity extends AppCompatActivity {
 
         String url = "https://api.instagram.com/v1/media/popular?client_id=" + CLIENT_ID;
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, null, new JsonHttpResponseHandler() {
-            // onSuccess
 
+        client.get(url, null, new JsonHttpResponseHandler() {
+
+            // onSuccess
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                aPhotos.clear();
+
                 // ITERATE EACH PHOTO ITEM INTO A JAVA OBJECT
                 JSONArray photosJSON;
                 try {
@@ -82,14 +105,16 @@ public class PhotosActivity extends AppCompatActivity {
 
                 // CALLBACK
                 aPhotos.notifyDataSetChanged();
+
+                // STOP SWIPE REFRESH
+                swipeContainer.setRefreshing(false);
             }
 
             // onFailure
             @Override
             public void onFailure(int StatusCode, Header[] headers, String responseString, Throwable throwable) {
-
+                Log.d("DEBUG", "Error: " + throwable.toString());
             }
         });
-
     }
 }
