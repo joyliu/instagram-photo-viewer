@@ -21,6 +21,17 @@ import java.util.List;
  * Created by joy.liu on 12/2/15.
  */
 public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
+    // LOOKUP CACHE
+    private static class ViewHolder {
+        TextView tvUser;
+        TextView tvTime;
+        TextView tvLikes;
+        TextView tvCaption;
+        ImageView ivPhoto;
+        ImageView ivProfilePhoto;
+    }
+
+
     // DATA NEEDED FOR THE ACTIVITY
     // Context, Data source
     public InstagramPhotosAdapter(Context context, List<InstagramPhoto> objects) {
@@ -34,29 +45,36 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         // GET DATA ITEM FOR POSITION
         InstagramPhoto photo = getItem(position);
 
+        ViewHolder viewHolder;
+
         // CHECK IF USING RECYCLED VIEW, IF NOT INFLATE
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_photo, parent, false);
-        }
 
-        // LOOK UP VIEWS FOR POPULATING DATA
-        TextView tvUser = (TextView) convertView.findViewById(R.id.tvUser);
-        TextView tvTime = (TextView) convertView.findViewById(R.id.tvTime);
-        TextView tvLikes = (TextView) convertView.findViewById(R.id.tvLikes);
-        TextView tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
-        ImageView ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
-        ImageView ivProfilePhoto = (ImageView) convertView.findViewById(R.id.ivProfilePhoto);
+            // LOOK UP VIEWS FOR POPULATING DATA
+            viewHolder.tvUser = (TextView) convertView.findViewById(R.id.tvUser);
+            viewHolder.tvTime = (TextView) convertView.findViewById(R.id.tvTime);
+            viewHolder.tvLikes = (TextView) convertView.findViewById(R.id.tvLikes);
+            viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
+            viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
+            viewHolder.ivProfilePhoto = (ImageView) convertView.findViewById(R.id.ivProfilePhoto);
+
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
 
         // CONVERT CREATED TIME TO RELATIVE TIME
         CharSequence relativeTimeSpan = DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000);
 
         // INSERT MODEL DATA INTO EACH VIEW ITEM
-        tvUser.setText(photo.username);
-        tvTime.setText(relativeTimeSpan);
-        tvLikes.setText(photo.likesCount + " likes");
+        viewHolder.tvUser.setText(photo.username);
+        viewHolder.tvTime.setText(relativeTimeSpan);
+        viewHolder.tvLikes.setText(photo.likesCount + " likes");
         if (photo.caption != null) {
             String formattedText = "<b>" + photo.username.toString() + "</b> " + photo.caption.toString();
-            tvCaption.setText(Html.fromHtml(formattedText));
+            viewHolder.tvCaption.setText(Html.fromHtml(formattedText));
         }
 
         // ROUNDED IMAGE
@@ -68,10 +86,15 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
                 .build();
 
         // CLEAR OUT ANY EXISTING IMAGE, INSERT NEW IMAGE USING PICASSO
-        ivPhoto.setImageResource(0);
-        Picasso.with(getContext()).load(photo.imageUrl).placeholder(R.drawable.placeholder_photo).into(ivPhoto);
-        ivProfilePhoto.setImageResource(0);
-        Picasso.with(getContext()).load(photo.profileUrl).transform(transformation).placeholder(R.drawable.placeholder_profile).into(ivProfilePhoto);
+        viewHolder.ivPhoto.setImageResource(0);
+        Picasso.with(getContext()).load(photo.imageUrl)
+                .placeholder(R.drawable.placeholder_photo)
+                .into(viewHolder.ivPhoto);
+        viewHolder.ivProfilePhoto.setImageResource(0);
+        Picasso.with(getContext()).load(photo.profileUrl)
+                .transform(transformation)
+                .placeholder(R.drawable.placeholder_profile)
+                .into(viewHolder.ivProfilePhoto);
 
         // RETURN CREATED ITEM AS A VIEW
         return convertView;
