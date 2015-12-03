@@ -61,12 +61,17 @@ public class PhotosActivity extends AppCompatActivity {
                         InstagramPhoto photo = new InstagramPhoto();
                         // Author Name: { "data" => [x] => "user" => "username" }
                         photo.username = photoJSON.getJSONObject("user").getString("username");
+                        photo.profileUrl = photoJSON.getJSONObject("user").getString("profile_picture");
                         // Caption: { "data" => [x] => "caption" }
-                        photo.caption = photoJSON.getJSONObject("caption").getString("text");
+                        if (photoJSON.optJSONObject("caption") != null) {
+                            photo.caption = photoJSON.getJSONObject("caption").getString("text");
+                        }
                         // URL: { "data" => [x] => "images" => "standard_resolution" => "url" }
                         photo.imageUrl = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getString("url");
                         photo.imageHeight = photoJSON.getJSONObject("images").getJSONObject("standard_resolution").getInt("height");
                         photo.likesCount = photoJSON.getJSONObject("likes").getInt("count");
+                        photo.createdTime = photoJSON.getLong("created_time");
+
 
                         // ADD TO ARRAY
                         photos.add(photo);
