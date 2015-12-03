@@ -18,7 +18,7 @@ The following **optional** features are implemented:
 * [ ] User can **pull-to-refresh** popular stream to get the latest popular photos
 * [ ] Show latest comments for each photo
 * [ ] Display each photo with the same style and proportions as the real Instagram
-* [ ] Display each user profile image using a RoundedImageViewDisplay each user profile image using a [RoundedImageView](https://github.com/vinc3m1/RoundedImageView)
+* [x] Display each user profile image using a RoundedImageViewDisplay each user profile image using a [RoundedImageView](https://github.com/vinc3m1/RoundedImageView)
 * [ ] Display a nice default placeholder graphic for each image during loading
 * [ ] Improved the user interface through styling and coloring
 

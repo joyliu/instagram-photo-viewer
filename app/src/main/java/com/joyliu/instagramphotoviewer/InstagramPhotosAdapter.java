@@ -1,7 +1,6 @@
 package com.joyliu.instagramphotoviewer;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -61,9 +60,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
         // ROUNDED IMAGE
         Transformation transformation = new RoundedTransformationBuilder()
-                .borderColor(Color.WHITE)
-                .borderWidthDp(1)
-                .cornerRadiusDp(30)
+                .cornerRadiusDp(100)
                 .oval(false)
                 .build();
 
@@ -71,7 +68,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         ivPhoto.setImageResource(0);
         Picasso.with(getContext()).load(photo.imageUrl).into(ivPhoto);
         ivProfilePhoto.setImageResource(0);
-        Picasso.with(getContext()).load(photo.profileUrl).into(ivProfilePhoto);
+        Picasso.with(getContext()).load(photo.profileUrl).transform(transformation).into(ivProfilePhoto);
 
         // RETURN CREATED ITEM AS A VIEW
         return convertView;

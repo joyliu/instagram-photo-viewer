@@ -9,8 +9,8 @@
         android:id="@+id/ivProfilePhoto"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:maxHeight="30dp"
-        android:maxWidth="30dp"
+        android:maxHeight="32dp"
+        android:maxWidth="32dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="8dp"
@@ -24,11 +24,11 @@
         android:text="User Name"
         android:id="@+id/tvUser"
         android:layout_toRightOf="@+id/ivProfilePhoto"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="16dp"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/colorPrimary"
         android:maxLines="1"/>
 
@@ -41,11 +41,11 @@
         android:layout_toRightOf="@+id/tvUser"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:gravity="right"
         android:textColor="@color/colorLightGray"
         android:maxLines="1"/>
@@ -57,7 +57,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
         android:minHeight="50dp"
-        android:layout_below="@+id/tvUser"
+        android:layout_below="@+id/ivProfilePhoto"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"/>
 
@@ -73,7 +73,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/colorPrimary"
         android:maxLines="1"/>
 
@@ -85,11 +85,11 @@
         android:layout_below="@+id/tvLikes"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:textColor="@color/colorAccent"
         android:maxLines="3"
         android:ellipsize="end"/>
