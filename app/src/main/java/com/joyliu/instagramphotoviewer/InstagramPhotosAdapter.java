@@ -2,8 +2,11 @@ package com.joyliu.instagramphotoviewer;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Html;
+import android.support.v4.content.ContextCompat;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +33,6 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         ImageView ivPhoto;
         ImageView ivProfilePhoto;
     }
-
 
     // DATA NEEDED FOR THE ACTIVITY
     // Context, Data source
@@ -66,15 +68,27 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         }
 
         // CONVERT CREATED TIME TO RELATIVE TIME
-        CharSequence relativeTimeSpan = DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000);
+        long now = System.currentTimeMillis();
+        CharSequence relativeTimeSpan = DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000,
+                now, 0L, DateUtils.FORMAT_ABBREV_RELATIVE);
+
+        // CHANGE TEXT COLOR
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(
+               ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        String username = photo.username.toString();
+        SpannableStringBuilder ssb = new SpannableStringBuilder(username);
+
+        // Apply the color span
+        ssb.setSpan(colorSpan, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         // INSERT MODEL DATA INTO EACH VIEW ITEM
         viewHolder.tvUser.setText(photo.username);
         viewHolder.tvTime.setText(relativeTimeSpan);
         viewHolder.tvLikes.setText(photo.likesCount + " likes");
         if (photo.caption != null) {
-            String formattedText = "<b>" + photo.username.toString() + "</b> " + photo.caption.toString();
-            viewHolder.tvCaption.setText(Html.fromHtml(formattedText));
+            ssb.append(" " + photo.caption.toString());
+            viewHolder.tvCaption.setText(ssb, TextView.BufferType.EDITABLE);
         }
 
         // ROUNDED IMAGE
