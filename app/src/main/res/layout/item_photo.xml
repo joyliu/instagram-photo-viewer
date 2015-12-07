@@ -88,12 +88,29 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="2dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:textSize="12sp"
         android:textColor="@color/colorAccent"
         android:maxLines="3"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comment"
+        android:id="@+id/tvComment"
+        android:layout_below="@+id/tvCaption"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:textSize="12sp"
+        android:textColor="@color/colorAccent"
+        android:maxLines="1"
         android:ellipsize="end"/>
 
 </RelativeLayout>

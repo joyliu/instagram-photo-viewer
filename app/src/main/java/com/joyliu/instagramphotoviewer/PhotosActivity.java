@@ -88,7 +88,7 @@ public class PhotosActivity extends AppCompatActivity {
                         photo.profileUrl = photoJSON.getJSONObject("user")
                                 .getString("profile_picture");
                         // Caption: { "data" => [x] => "caption" }
-                        if (photoJSON.optJSONObject("caption") != null) {
+                        if (photoJSON.getJSONObject("caption") != null) {
                             photo.caption = photoJSON.getJSONObject("caption")
                                     .getString("text");
                         }
@@ -101,6 +101,16 @@ public class PhotosActivity extends AppCompatActivity {
                                 .getInt("count");
                         photo.createdTime = photoJSON.getLong("created_time");
 
+                        // GET LATEST COMMENT WIP!!!
+                        int commentsCount = photoJSON.getJSONObject("comments").getInt("count");
+                        if (commentsCount > 0) {
+                            JSONObject commentGroupJSON = photoJSON.getJSONObject("comments");
+                            JSONArray commentsDataJSON = commentGroupJSON.getJSONArray("data"); // ARRAY OF COMMENTS
+                            int x = commentsDataJSON.length() - 1;
+                            JSONObject commentJSON = commentsDataJSON.getJSONObject(x);
+                            photo.commentText = commentJSON.getString("text");
+                            photo.commentUser = commentJSON.getJSONObject("from").getString("username");
+                        }
 
                         // ADD TO ARRAY
                         photos.add(photo);

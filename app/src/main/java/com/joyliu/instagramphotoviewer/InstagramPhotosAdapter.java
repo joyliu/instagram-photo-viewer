@@ -32,7 +32,10 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         TextView tvCaption;
         ImageView ivPhoto;
         ImageView ivProfilePhoto;
+        TextView tvComment;
     }
+
+    private SpannableStringBuilder ssb;
 
     // DATA NEEDED FOR THE ACTIVITY
     // Context, Data source
@@ -46,7 +49,6 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
     public View getView(int position, View convertView, ViewGroup parent) {
         // GET DATA ITEM FOR POSITION
         InstagramPhoto photo = getItem(position);
-
         ViewHolder viewHolder;
 
         // CHECK IF USING RECYCLED VIEW, IF NOT INFLATE
@@ -61,6 +63,7 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
             viewHolder.tvCaption = (TextView) convertView.findViewById(R.id.tvCaption);
             viewHolder.ivPhoto = (ImageView) convertView.findViewById(R.id.ivPhoto);
             viewHolder.ivProfilePhoto = (ImageView) convertView.findViewById(R.id.ivProfilePhoto);
+            viewHolder.tvComment = (TextView) convertView.findViewById(R.id.tvComment);
 
             convertView.setTag(viewHolder);
         } else {
@@ -72,23 +75,22 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
         CharSequence relativeTimeSpan = DateUtils.getRelativeTimeSpanString(photo.createdTime * 1000,
                 now, 0L, DateUtils.FORMAT_ABBREV_RELATIVE);
 
-        // CHANGE TEXT COLOR
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(
-               ContextCompat.getColor(getContext(), R.color.colorPrimary));
-
-        String username = photo.username.toString();
-        SpannableStringBuilder ssb = new SpannableStringBuilder(username);
-
-        // Apply the color span
-        ssb.setSpan(colorSpan, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
         // INSERT MODEL DATA INTO EACH VIEW ITEM
         viewHolder.tvUser.setText(photo.username);
         viewHolder.tvTime.setText(relativeTimeSpan);
         viewHolder.tvLikes.setText(photo.likesCount + " likes");
         if (photo.caption != null) {
+            ssb = null;
+            changeColor(photo.username);
             ssb.append(" " + photo.caption.toString());
             viewHolder.tvCaption.setText(ssb, TextView.BufferType.EDITABLE);
+        }
+
+        if (photo.commentText != null) {
+            ssb = null;
+            changeColor(photo.commentUser);
+            ssb.append(" " + photo.commentText);
+            viewHolder.tvComment.setText(ssb, TextView.BufferType.EDITABLE);
         }
 
         // ROUNDED IMAGE
@@ -112,5 +114,17 @@ public class InstagramPhotosAdapter extends ArrayAdapter<InstagramPhoto> {
 
         // RETURN CREATED ITEM AS A VIEW
         return convertView;
+    }
+
+    public void changeColor(Object name) {
+        String username = name.toString();
+        ssb = new SpannableStringBuilder(username);
+
+        // CHANGE TEXT COLOR
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(
+                ContextCompat.getColor(getContext(), R.color.colorPrimary));
+
+        // Apply the color span
+        ssb.setSpan(colorSpan, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 }
